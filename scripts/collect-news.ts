@@ -83,6 +83,8 @@ async function collectArticle(item: typeof articlesToScrape[0]): Promise<boolean
     country: item.country,
     category: item.category,
     imageUrl: scrapedArticle.imageUrl,
+    // Use scraped date if available, otherwise use current date for database consistency
+    // The scraper returns undefined when it can't reliably parse the date
     publishedAt: scrapedArticle.publishedAt || new Date(),
     featured: false,
     scrapedAt: new Date(),
