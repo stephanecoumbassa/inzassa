@@ -75,6 +75,13 @@ npm run dev
 
 Le site sera accessible sur `http://localhost:3000`
 
+6. **Vérifier l'installation (optionnel)**
+```bash
+npm run verify
+```
+
+Cette commande vérifie que toutes les dépendances et utilitaires sont correctement installés.
+
 ## Structure du projet
 
 ```
