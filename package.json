@@ -10,7 +10,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "collect-news": "tsx scripts/collect-news.ts"
+    "collect-news": "tsx scripts/collect-news.ts",
+    "start-scheduler": "tsx scripts/cron-scraper.ts"
   },
   "dependencies": {
     "@nuxtjs/i18n": "^8.3.1",
@@ -18,10 +19,14 @@
     "axios": "^1.7.0",
     "cheerio": "^1.0.0",
     "mongoose": "^8.6.0",
+    "node-cron": "^4.2.1",
     "nuxt": "^3.14.1592",
+    "openai": "^6.7.0",
+    "robots-parser": "^3.0.1",
     "unhead": "^1.11.20",
     "vue": "^3.5.0",
-    "vue-router": "^4.5.0"
+    "vue-router": "^4.5.0",
+    "winston": "^3.18.3"
   },
   "devDependencies": {
     "@nuxt/types": "^2.18.0",
