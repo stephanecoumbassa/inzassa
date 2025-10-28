@@ -275,3 +275,343 @@ For issues or questions:
 2. Review the documentation in `IMPLEMENTATION_GUIDE.md`
 3. Test individual components (scraper, translator) separately
 4. Ensure all dependencies are installed: `npm install`
+
+## Advanced Features
+
+### 1. Winston Logging System
+
+The system now includes professional logging with Winston:
+
+**Features:**
+- Structured JSON logs
+- Separate error and combined log files
+- Automatic log rotation (5MB max, 5 files)
+- Console output in development
+- Production-ready
+
+**Log Files:**
+- `logs/error.log` - Error level logs only
+- `logs/combined.log` - All logs (info, warn, error)
+
+**Configuration:**
+```env
+# Set logging level
+LOG_LEVEL=info  # Options: error, warn, info, debug
+```
+
+**Usage in Code:**
+```typescript
+import logger from './server/utils/logger';
+
+logger.info('Article processed', { url, title });
+logger.error('Scraping failed', { url, error: error.message });
+```
+
+### 2. AI Content Reformulation
+
+Avoid plagiarism by reformulating articles with OpenAI:
+
+**Setup:**
+1. Get an API key from https://platform.openai.com/api-keys
+2. Add to `.env`:
+   ```env
+   OPENAI_API_KEY=sk-...
+   REFORMULATION_ENABLED=true
+   OPENAI_MODEL=gpt-3.5-turbo
+   ```
+
+**How it works:**
+- Rewrites articles in unique style
+- Preserves all facts and information
+- Maintains professional tone
+- Adapted for francophone African audience
+
+**Cost Considerations:**
+- GPT-3.5-Turbo: ~$0.002 per 1000 tokens
+- GPT-4: ~$0.03 per 1000 tokens
+- Average article: 2000-4000 tokens
+
+**Optional:** The system works without reformulation if not configured.
+
+### 3. Robots.txt Compliance
+
+Automatic robots.txt checking before scraping:
+
+**Features:**
+- Checks robots.txt before each scrape
+- Respects crawl-delay directives
+- Caches robots.txt for 24 hours
+- Graceful fallback if robots.txt unavailable
+
+**How it works:**
+The system automatically:
+1. Fetches robots.txt for each domain
+2. Checks if URL is allowed for scraping
+3. Respects crawl-delay if specified
+4. Skips disallowed URLs
+
+**No configuration needed** - works automatically!
+
+### 4. Cron Job Automation
+
+Schedule automatic news collection:
+
+**Quick Start:**
+```bash
+npm run start-scheduler
+```
+
+**Configuration:**
+```env
+# Run every 2 hours
+CRON_SCHEDULE=0 */2 * * *
+
+# Timezone
+TIMEZONE=Africa/Dakar
+
+# Run immediately on startup
+RUN_ON_STARTUP=true
+```
+
+**Schedule Examples:**
+```env
+# Every hour
+CRON_SCHEDULE=0 * * * *
+
+# Three times a day (8am, 12pm, 6pm)
+CRON_SCHEDULE=0 8,12,18 * * *
+
+# Every day at midnight
+CRON_SCHEDULE=0 0 * * *
+
+# Every Monday at 9am
+CRON_SCHEDULE=0 9 * * 1
+```
+
+**Production Deployment with PM2:**
+```bash
+# Install PM2
+npm install -g pm2
+
+# Start scheduler
+pm2 start npm --name "inzassa-scheduler" -- run start-scheduler
+
+# Monitor
+pm2 logs inzassa-scheduler
+
+# Auto-start on system reboot
+pm2 startup
+pm2 save
+```
+
+### 5. Health Monitoring
+
+Check system status and configuration:
+
+```typescript
+import { getReformulationStatus } from './server/utils/reformulator';
+import { getRobotsCacheStats } from './server/utils/robots-checker';
+
+// Check reformulation status
+const reformStatus = getReformulationStatus();
+console.log('Reformulation:', reformStatus);
+// Output: { enabled: true, configured: true, model: 'gpt-3.5-turbo' }
+
+// Check robots.txt cache
+const robotsStats = getRobotsCacheStats();
+console.log('Robots cache:', robotsStats);
+// Output: { size: 5, domains: ['https://seneweb.com', ...] }
+```
+
+## Complete Workflow
+
+Here's how all components work together:
+
+```
+1. Cron scheduler triggers collection
+   ↓
+2. For each article URL:
+   ├─ Check robots.txt compliance
+   ├─ Respect crawl-delay if specified
+   ├─ Scrape article content
+   ├─ Reformulate with AI (optional)
+   ├─ Translate to 6 languages
+   ├─ Save to MongoDB
+   └─ Log all activities
+   ↓
+3. Generate collection summary
+   ↓
+4. Logs stored in logs/ directory
+```
+
+## Best Practices
+
+### 1. Start Small
+```typescript
+// Test with 2-3 articles first
+const articlesToScrape = [
+  {
+    url: 'https://www.seneweb.com/news/...',
+    site: 'seneweb',
+    country: 'senegal',
+    category: 'politique',
+  },
+  // Add 1-2 more
+];
+```
+
+### 2. Monitor Logs
+```bash
+# Watch real-time logs
+tail -f logs/combined.log
+
+# Check errors only
+tail -f logs/error.log
+
+# Search for specific article
+grep "article-title" logs/combined.log
+```
+
+### 3. Respect Rate Limits
+```typescript
+// Adjust delay between requests (default: 3000ms)
+await delay(5000); // 5 seconds for slower sites
+```
+
+### 4. Use Self-Hosted Translation
+For production, run your own LibreTranslate:
+```bash
+docker run -d -p 5000:5000 libretranslate/libretranslate
+```
+
+### 5. Enable Reformulation Gradually
+Start without reformulation, then enable it once you've validated the pipeline.
+
+## Troubleshooting
+
+### Collection Fails Immediately
+**Check:** MongoDB connection
+```bash
+# Test MongoDB connection
+mongo mongodb://localhost:27017/inzassa
+```
+
+### Translation Errors
+**Check:** LibreTranslate availability
+```bash
+curl https://libretranslate.com/languages
+```
+
+### Reformulation Not Working
+**Check:** OpenAI API key and credits
+- Verify key is valid
+- Check account has credits
+- Review logs for specific errors
+
+### Scraping Blocked
+**Check:** robots.txt compliance
+- Verify URL is allowed
+- Check if crawl-delay is being respected
+- Consider adding more delay between requests
+
+### Scheduler Not Running
+**Check:** Cron expression validity
+```javascript
+const cron = require('node-cron');
+console.log(cron.validate('0 */2 * * *')); // Should return true
+```
+
+## Performance Optimization
+
+### 1. Parallel Processing (Advanced)
+For large-scale scraping, consider parallel workers:
+```typescript
+// Use worker threads or child processes
+// Process multiple articles simultaneously
+// (Implementation depends on your scale needs)
+```
+
+### 2. Database Indexing
+Ensure MongoDB indexes are created:
+```javascript
+// Indexes are auto-created by the schema
+// But verify with:
+db.news.getIndexes()
+```
+
+### 3. Caching
+- Robots.txt: Cached for 24 hours automatically
+- Consider caching translated content for updates
+
+### 4. Error Recovery
+The system automatically:
+- Skips duplicate articles
+- Continues on individual article failures
+- Logs all errors for review
+
+## Security Considerations
+
+### 1. API Keys
+Never commit API keys:
+```bash
+# Always use .env file
+echo ".env" >> .gitignore
+```
+
+### 2. Rate Limiting
+Respect source websites:
+- Use appropriate delays
+- Don't overwhelm servers
+- Honor robots.txt
+
+### 3. Legal Compliance
+- Always cite sources (originalUrl field)
+- Respect copyright laws
+- Consider terms of service
+- Use reformulation for unique content
+
+## Production Deployment
+
+### Recommended Stack:
+- **Server:** Linux VPS (Ubuntu 20.04+)
+- **Process Manager:** PM2
+- **Database:** MongoDB Atlas or self-hosted
+- **Logs:** Centralized logging (e.g., Papertrail, Loggly)
+- **Monitoring:** PM2 monitoring or custom dashboard
+
+### Deployment Steps:
+```bash
+# 1. Clone repository
+git clone <repo-url>
+cd inzassa
+
+# 2. Install dependencies
+npm install
+
+# 3. Configure environment
+cp .env.example .env
+nano .env  # Edit with production values
+
+# 4. Test collection
+npm run collect-news
+
+# 5. Start scheduler with PM2
+pm2 start npm --name "inzassa-scheduler" -- run start-scheduler
+pm2 save
+pm2 startup
+
+# 6. Monitor
+pm2 monit
+```
+
+## Support
+
+For issues or questions:
+1. Check logs in `logs/` directory
+2. Review this guide
+3. Consult IMPLEMENTATION_GUIDE.md
+4. Check GitHub issues
+
+---
+
+**Happy scraping! 🚀**
