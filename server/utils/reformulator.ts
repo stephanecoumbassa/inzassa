@@ -19,15 +19,17 @@ let openai: OpenAI | null = null;
 // Initialize OpenAI client only if enabled and API key is provided
 if (REFORMULATION_ENABLED) {
   if (!process.env.OPENAI_API_KEY) {
-    console.warn('⚠️  REFORMULATION_ENABLED is true but OPENAI_API_KEY is not set. Reformulation will be skipped.');
-    logger.warn('OpenAI API key not configured', { 
+    logger.warn('REFORMULATION_ENABLED is true but OPENAI_API_KEY is not set. Reformulation will be skipped.', { 
       action: 'reformulation_config_warning' 
     });
   } else {
     openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
     });
-    console.log('✅ OpenAI reformulation enabled');
+    logger.info('OpenAI reformulation enabled', { 
+      model: OPENAI_MODEL,
+      action: 'reformulation_initialized' 
+    });
   }
 }
 
