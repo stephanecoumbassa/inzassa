@@ -364,6 +364,22 @@ mongosh mongodb://localhost:27017/inzassa
 
 ## 🧪 Testing Guide
 
+### Quick Setup Verification
+
+The easiest way to verify your setup is complete and working:
+
+```bash
+npm run verify
+```
+
+This automated verification script checks:
+- ✅ All utility modules can be imported
+- ✅ Required dependencies are installed
+- ✅ NPM scripts are configured
+- ✅ Environment variables status
+- ✅ Scraper configurations available
+- ✅ File structure is correct
+
 ### Quick Validation Tests
 
 After setting up the project, run these tests to verify everything works:
