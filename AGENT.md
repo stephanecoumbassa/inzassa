@@ -66,14 +66,21 @@ Inzassa is a multilingual news portal for Francophone African countries with aut
 ## 🔄 Current Tasks (Phase 3)
 
 ### Priority 1: Testing & Validation
-- [ ] Install npm dependencies
-- [ ] Run build to verify all components compile
-- [ ] Test MongoDB connection
-- [ ] Test scraper with sample articles
-- [ ] Test translator with sample text
-- [ ] Validate all API endpoints return proper data
+- [x] Install npm dependencies (✅ 827 packages, 0 vulnerabilities)
+- [x] Run build to verify all components compile (✅ Build successful - 5.63 MB total)
+- [ ] Test MongoDB connection (requires MongoDB running)
+- [ ] Test scraper with sample articles (requires article URLs)
+- [ ] Test translator with sample text (requires LibreTranslate access)
+- [ ] Validate all API endpoints return proper data (requires running dev server)
 - [ ] Test cron scheduler in development mode
 - [ ] Verify logging system works correctly
+
+**Build Status:** ✅ SUCCESS
+- Client built: 2.65s
+- Server built: 1.51s
+- Total size: 5.63 MB (1.42 MB gzipped)
+- Dependencies: 827 packages installed
+- Security: 0 vulnerabilities found
 
 ### Priority 2: Content Population
 - [ ] Add real article URLs to collection script
@@ -354,6 +361,291 @@ mongosh mongodb://localhost:27017/inzassa
 - Check internet connection
 - Consider self-hosted instance for reliability
 - Review rate limits
+
+## 🧪 Testing Guide
+
+### Quick Validation Tests
+
+After setting up the project, run these tests to verify everything works:
+
+#### 1. Build Test (Already Passed ✅)
+```bash
+npm run build
+# Expected: Successful build with no errors
+```
+
+#### 2. TypeScript Compilation Test
+```bash
+npx tsc --noEmit
+# Expected: No type errors
+```
+
+#### 3. Server Utils Import Test
+```bash
+# Test logger
+node -e "import('./server/utils/logger.js').then(m => console.log('Logger OK'))"
+
+# Test scraper
+node -e "import('./server/utils/scraper.js').then(m => console.log('Scraper OK'))"
+
+# Test translator
+node -e "import('./server/utils/translator.js').then(m => console.log('Translator OK'))"
+
+# Test reformulator
+node -e "import('./server/utils/reformulator.js').then(m => console.log('Reformulator OK'))"
+
+# Test robots checker
+node -e "import('./server/utils/robots-checker.js').then(m => console.log('Robots checker OK'))"
+```
+
+#### 4. MongoDB Connection Test (Requires MongoDB)
+```bash
+# Start MongoDB first:
+# docker run -d -p 27017:27017 --name mongodb mongo:latest
+
+# Then test connection
+node -e "
+import mongoose from 'mongoose';
+mongoose.connect('mongodb://localhost:27017/inzassa')
+  .then(() => console.log('MongoDB OK'))
+  .catch(e => console.error('MongoDB Error:', e.message))
+  .finally(() => mongoose.disconnect());
+"
+```
+
+#### 5. Development Server Test
+```bash
+npm run dev
+# Open http://localhost:3000 in browser
+# Expected: Homepage loads with navigation and language selector
+```
+
+#### 6. API Endpoints Test
+```bash
+# Start dev server first: npm run dev
+# Then in another terminal:
+
+# Test news API
+curl http://localhost:3000/api/news
+
+# Test countries API
+curl http://localhost:3000/api/countries
+
+# Test books API
+curl http://localhost:3000/api/books
+```
+
+#### 7. Scraper Function Test (Without DB)
+```javascript
+// Create test file: test-scraper.js
+import { isAllowedByRobots, getCrawlDelay } from './server/utils/robots-checker.js';
+
+const testUrl = 'https://www.seneweb.com/';
+const allowed = await isAllowedByRobots(testUrl);
+console.log('Allowed:', allowed);
+
+const delay = await getCrawlDelay(testUrl);
+console.log('Crawl delay:', delay, 'ms');
+```
+
+#### 8. Translation Test
+```javascript
+// Create test file: test-translation.js
+import { translateText } from './server/utils/translator.js';
+
+const text = 'Bonjour le monde';
+const translated = await translateText(text, 'en', 'fr');
+console.log('Original:', text);
+console.log('Translated:', translated);
+```
+
+#### 9. Logger Test
+```javascript
+// Create test file: test-logger.js
+import logger from './server/utils/logger.js';
+
+logger.info('Test info message', { test: true });
+logger.warn('Test warning message');
+logger.error('Test error message', { error: 'test' });
+
+console.log('Check logs/ directory for output');
+```
+
+#### 10. Reformulation Status Test
+```javascript
+// Create test file: test-reformulation.js
+import { getReformulationStatus } from './server/utils/reformulator.js';
+
+const status = getReformulationStatus();
+console.log('Reformulation status:', status);
+// Expected: { enabled: false, configured: false } (unless OPENAI_API_KEY is set)
+```
+
+### Integration Tests
+
+#### Full Collection Test (Requires MongoDB + Internet)
+```bash
+# 1. Start MongoDB
+docker run -d -p 27017:27017 --name mongodb mongo:latest
+
+# 2. Add test article URLs to scripts/collect-news.ts
+# Edit the articlesToScrape array with 1-2 valid article URLs
+
+# 3. Run collection
+npm run collect-news
+
+# 4. Check results
+mongosh inzassa
+db.news.find().pretty()
+
+# 5. Check logs
+cat logs/combined.log
+```
+
+#### Scheduler Test
+```bash
+# 1. Set environment for testing
+export CRON_SCHEDULE='*/1 * * * *'  # Every minute
+export RUN_ON_STARTUP=true
+
+# 2. Start scheduler
+npm run start-scheduler
+
+# 3. Monitor logs
+tail -f logs/combined.log
+
+# 4. Stop with Ctrl+C after a few runs
+```
+
+### Performance Tests
+
+#### Load Test for API
+```bash
+# Install Apache Bench (if not available)
+# sudo apt-get install apache2-utils
+
+# Start dev server
+npm run dev &
+
+# Test news endpoint
+ab -n 100 -c 10 http://localhost:3000/api/news
+
+# Test with parameters
+ab -n 100 -c 10 "http://localhost:3000/api/news?country=senegal&limit=20"
+```
+
+#### Scraping Performance Test
+```javascript
+// Create test file: test-scraping-performance.js
+import { scrapeArticle, scraperConfigs } from './server/utils/scraper.js';
+
+const urls = [
+  'https://www.seneweb.com/article1',
+  'https://www.seneweb.com/article2',
+  // Add more URLs
+];
+
+const start = Date.now();
+let successCount = 0;
+
+for (const url of urls) {
+  try {
+    await scrapeArticle(url, scraperConfigs.seneweb);
+    successCount++;
+  } catch (error) {
+    console.error(`Failed: ${url}`);
+  }
+}
+
+const duration = Date.now() - start;
+console.log(`Scraped ${successCount}/${urls.length} articles in ${duration}ms`);
+console.log(`Average: ${duration / urls.length}ms per article`);
+```
+
+### Security Tests
+
+#### Dependency Audit
+```bash
+npm audit
+# Expected: 0 vulnerabilities (already verified)
+```
+
+#### Environment Variables Check
+```bash
+# Verify sensitive data not committed
+grep -r "OPENAI_API_KEY" .env 2>/dev/null && echo "WARNING: Check .env is in .gitignore"
+grep -r "mongodb://.*:.*@" . --exclude-dir=node_modules 2>/dev/null && echo "WARNING: Credentials in code"
+```
+
+#### Input Sanitization Test
+```javascript
+// Test with malicious inputs
+const maliciousInputs = [
+  '<script>alert("xss")</script>',
+  '"; DROP TABLE news; --',
+  '../../../etc/passwd',
+];
+
+// Test each input through your APIs
+// Should be properly escaped/sanitized
+```
+
+### Manual Test Checklist
+
+Before deployment, manually verify:
+
+- [ ] Homepage loads correctly
+- [ ] Language switcher works (all 6 languages)
+- [ ] News listing page displays articles
+- [ ] Article detail page works
+- [ ] Books section displays correctly
+- [ ] Countries section displays correctly
+- [ ] Filters work (country, category)
+- [ ] Pagination works
+- [ ] Mobile responsive design works
+- [ ] Images load properly
+- [ ] Links work correctly
+- [ ] 404 page displays for invalid routes
+- [ ] 500 page displays for errors (test by breaking something temporarily)
+
+### Continuous Integration Recommendations
+
+For a production setup, consider adding:
+
+1. **GitHub Actions Workflow** (`.github/workflows/ci.yml`):
+```yaml
+name: CI
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - run: npm install
+      - run: npm run build
+      - run: npm audit
+```
+
+2. **Unit Tests with Vitest**:
+```bash
+npm install -D vitest
+# Add test scripts to package.json
+# Write unit tests for utilities
+```
+
+3. **E2E Tests with Playwright**:
+```bash
+npm install -D @playwright/test
+# Write end-to-end tests for critical user flows
+```
 
 ## 📞 Support Resources
 
