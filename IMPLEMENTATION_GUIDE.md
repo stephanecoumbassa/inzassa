@@ -108,7 +108,7 @@ Créer `scripts/collect-news.js`:
 
 ```javascript
 import mongoose from 'mongoose';
-import { scrapeArticle, scraperConfigs } from '../server/utils/scraper.ts';
+import { scrapeArticle, scraperConfigs } from '../server/utils/scraper.js';
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/inzassa';
 
@@ -212,13 +212,17 @@ export async function translateArticle(article: {
 ### Option 2: DeepL API (Plus précis)
 
 ```bash
-npm install deepl-node
+npm install deepl
 ```
 
 ```typescript
-import * as deepl from 'deepl-node';
+import * as deepl from 'deepl';
 
-const translator = new deepl.Translator(process.env.DEEPL_API_KEY);
+const translator = new deepl.Translator(process.env.DEEPL_API_KEY || '');
+
+if (!process.env.DEEPL_API_KEY) {
+  console.warn('DEEPL_API_KEY not configured');
+}
 
 export async function translateText(
   text: string,
@@ -288,6 +292,10 @@ npm install openai
 
 ```typescript
 import OpenAI from 'openai';
+
+if (!process.env.OPENAI_API_KEY) {
+  throw new Error('OPENAI_API_KEY must be configured in environment variables');
+}
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
