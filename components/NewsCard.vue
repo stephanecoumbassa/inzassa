@@ -19,10 +19,10 @@
   </div>
 </template>
 
-<script setup lang="ts">
-const props = defineProps<{
-  news: any;
-}>();
+<script setup>
+const props = defineProps({
+  news: Object
+});
 
 const { locale } = useI18n();
 
@@ -35,7 +35,7 @@ const getSummary = () => {
   return summary.substring(0, 150) + (summary.length > 150 ? '...' : '');
 };
 
-const formatDate = (date: string) => {
+const formatDate = (date) => {
   return new Date(date).toLocaleDateString(locale.value);
 };
 </script>

@@ -12,20 +12,26 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "nuxt": "^3.13.0",
-    "vue": "^3.4.0",
-    "vue-router": "^4.4.0",
-    "@nuxtjs/i18n": "^8.5.0",
-    "mongoose": "^8.6.0",
+    "@nuxtjs/i18n": "^8.3.1",
+    "@unhead/vue": "^2.0.19",
     "axios": "^1.7.0",
     "cheerio": "^1.0.0",
-    "@nuxtjs/google-analytics": "^3.0.0"
+    "mongoose": "^8.6.0",
+    "nuxt": "^3.14.1592",
+    "unhead": "^1.11.20",
+    "vue": "^3.5.0",
+    "vue-router": "^4.5.0"
   },
   "devDependencies": {
     "@nuxt/types": "^2.18.0",
     "typescript": "^5.5.0"
   },
-  "keywords": ["news", "africa", "francophone", "multilingual"],
+  "keywords": [
+    "news",
+    "africa",
+    "francophone",
+    "multilingual"
+  ],
   "author": "",
   "license": "ISC"
 }

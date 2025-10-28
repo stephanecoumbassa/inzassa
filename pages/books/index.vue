@@ -52,9 +52,9 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 const { locale } = useI18n();
-const selectedBook = ref<any>(null);
+const selectedBook = ref(null);
 
 const { data } = await useFetch('/api/books', {
   query: { limit: 50 }
@@ -62,12 +62,12 @@ const { data } = await useFetch('/api/books', {
 
 const books = computed(() => data.value?.data || []);
 
-const getSummary = (book: any) => {
+const getSummary = (book) => {
   const summary = book.summary?.[locale.value] || book.summary?.fr || '';
   return summary.substring(0, 200) + (summary.length > 200 ? '...' : '');
 };
 
-const getFullSummary = (book: any) => {
+const getFullSummary = (book) => {
   const summary = book.summary?.[locale.value] || book.summary?.fr || '';
   return summary.replace(/\n/g, '<br><br>');
 };

@@ -38,7 +38,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 const { data: featuredData } = await useFetch('/api/news', {
   query: { featured: 'true', limit: 3 }
 });

@@ -37,18 +37,18 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 const { locale } = useI18n();
 
 const { data } = await useFetch('/api/countries');
 const countries = computed(() => data.value?.data || []);
 
-const getDescription = (country: any) => {
+const getDescription = (country) => {
   const desc = country.description?.[locale.value] || country.description?.fr || '';
   return desc.substring(0, 150) + (desc.length > 150 ? '...' : '');
 };
 
-const formatNumber = (num: number) => {
+const formatNumber = (num) => {
   return num?.toLocaleString(locale.value) || 'N/A';
 };
 </script>

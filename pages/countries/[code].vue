@@ -70,7 +70,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 const route = useRoute();
 const { locale } = useI18n();
 
@@ -102,7 +102,7 @@ const getHistory = () => {
   return hist.replace(/\n/g, '<br><br>');
 };
 
-const formatNumber = (num: number) => {
+const formatNumber = (num) => {
   return num?.toLocaleString(locale.value) || 'N/A';
 };
 </script>

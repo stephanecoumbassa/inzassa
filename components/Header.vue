@@ -25,11 +25,11 @@
   </header>
 </template>
 
-<script setup lang="ts">
+<script setup>
 const { locale, locales } = useI18n();
 const switchLocalePath = useSwitchLocalePath();
 
 const availableLocales = computed(() => {
-  return (locales.value as any[]).filter(i => i.code !== locale.value);
+  return (locales.value).filter(i => i.code !== locale.value);
 });
 </script>

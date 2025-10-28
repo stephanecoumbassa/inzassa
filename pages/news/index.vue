@@ -61,15 +61,15 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 const selectedCountry = ref('');
 const selectedCategory = ref('');
 const currentPage = ref(1);
-const news = ref<any[]>([]);
+const news = ref([]);
 const pagination = ref({ page: 1, pages: 1, total: 0, limit: 12 });
 
 const fetchNews = async () => {
-  const query: any = {
+  const query = {
     page: currentPage.value,
     limit: 12
   };
@@ -85,7 +85,7 @@ const fetchNews = async () => {
   }
 };
 
-const goToPage = (page: number) => {
+const goToPage = (page) => {
   currentPage.value = page;
   fetchNews();
   window.scrollTo({ top: 0, behavior: 'smooth' });

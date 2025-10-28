@@ -1,7 +1,6 @@
 <template>
   <div class="ad-container">
-    <!-- Google AdSense will be injected here -->
-    <div v-if="config.public.googleAdsenseId">
+    <div v-if="hasAdsenseId">
       <ins
         class="adsbygoogle"
         style="display:block"
@@ -17,23 +16,19 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 const config = useRuntimeConfig();
+const hasAdsenseId = computed(() => !!config.public.googleAdsenseId);
 
-onMounted(() => {
-  if (config.public.googleAdsenseId) {
-    // Load Google AdSense
-    const script = document.createElement('script');
-    script.async = true;
-    script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${config.public.googleAdsenseId}`;
-    script.crossOrigin = 'anonymous';
-    document.head.appendChild(script);
-
-    // Push ad
-    setTimeout(() => {
-      (window as any).adsbygoogle = (window as any).adsbygoogle || [];
-      (window as any).adsbygoogle.push({});
-    }, 100);
-  }
-});
+if (hasAdsenseId.value) {
+  useHead({
+    script: [
+      {
+        src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${config.public.googleAdsenseId}`,
+        async: true,
+        crossorigin: 'anonymous'
+      }
+    ]
+  });
+}
 </script>

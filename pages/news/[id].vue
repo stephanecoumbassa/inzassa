@@ -35,7 +35,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 const route = useRoute();
 const { locale } = useI18n();
 
@@ -51,7 +51,7 @@ const getContent = () => {
   return content.replace(/\n/g, '<br><br>');
 };
 
-const formatDate = (date: string) => {
+const formatDate = (date) => {
   return new Date(date).toLocaleDateString(locale.value, {
     year: 'numeric',
     month: 'long',
