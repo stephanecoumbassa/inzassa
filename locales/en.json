@@ -1,0 +1,50 @@
+{
+  "nav": {
+    "home": "Home",
+    "news": "News",
+    "books": "Books",
+    "countries": "Countries",
+    "about": "About"
+  },
+  "home": {
+    "title": "Francophone African News",
+    "subtitle": "Your information portal for Francophone African countries",
+    "featured": "Featured",
+    "latest": "Latest News"
+  },
+  "news": {
+    "title": "News",
+    "readMore": "Read more",
+    "category": "Category",
+    "country": "Country",
+    "publishedAt": "Published on",
+    "source": "Source"
+  },
+  "books": {
+    "title": "Books by African Authors",
+    "author": "Author",
+    "year": "Year",
+    "genre": "Genre",
+    "readSummary": "Read summary"
+  },
+  "countries": {
+    "title": "Francophone African Countries",
+    "capital": "Capital",
+    "population": "Population",
+    "languages": "Languages",
+    "currency": "Currency",
+    "learnMore": "Learn more"
+  },
+  "categories": {
+    "politique": "Politics",
+    "economie": "Economy",
+    "sport": "Sports",
+    "culture": "Culture",
+    "societe": "Society",
+    "international": "International"
+  },
+  "footer": {
+    "description": "News portal for Francophone African countries",
+    "copyright": "© 2024 Inzassa. All rights reserved."
+  }
+}
