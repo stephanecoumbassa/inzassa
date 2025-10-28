@@ -28,20 +28,28 @@ const News = mongoose.models.News || mongoose.model('News', NewsSchema);
 /**
  * List of articles to scrape
  * In production, this could come from a queue, RSS feeds, or automated discovery
+ * 
+ * Example format:
+ * {
+ *   url: 'https://www.seneweb.com/news/actualite',
+ *   site: 'seneweb',
+ *   country: 'senegal',
+ *   category: 'politique',
+ * }
  */
-const articlesToScrape = [
-  // Example entries - these URLs are placeholders and need to be replaced with real articles
-  {
-    url: 'https://www.example-news-site.com/article-1',
-    site: 'seneweb', // Must match a key in scraperConfigs
-    country: 'senegal',
-    category: 'politique',
-  },
-  // Add more article URLs here
+const articlesToScrape: Array<{
+  url: string;
+  site: string;
+  country: string;
+  category: string;
+}> = [
+  // Add actual article URLs here before running the script
+  // Leave empty to avoid scraping invalid URLs
 ];
 
 /**
  * Collect and process a single article
+ * @returns true if collected successfully, false if skipped (duplicate), throws on error
  */
 async function collectArticle(item: typeof articlesToScrape[0]): Promise<boolean> {
   try {
@@ -105,14 +113,17 @@ async function collectNews() {
 
     // Process each article
     for (const item of articlesToScrape) {
-      const result = await collectArticle(item);
-      
-      if (result === true) {
-        successCount++;
-      } else if (result === false) {
-        skipCount++;
-      } else {
+      try {
+        const result = await collectArticle(item);
+        
+        if (result === true) {
+          successCount++;
+        } else {
+          skipCount++;
+        }
+      } catch (error) {
         errorCount++;
+        console.error(`❌ Failed to process article:`, error instanceof Error ? error.message : error);
       }
 
       // Add delay between requests to respect rate limits

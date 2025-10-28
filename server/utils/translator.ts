@@ -16,6 +16,7 @@ export interface TranslationMap {
 }
 
 const LIBRETRANSLATE_URL = process.env.LIBRETRANSLATE_URL || 'https://libretranslate.com';
+const TRANSLATION_DELAY_MS = parseInt(process.env.TRANSLATION_DELAY_MS || '500', 10);
 
 /**
  * Translate text from French to a target language
@@ -75,8 +76,8 @@ export async function translateToAllLanguages(
     if (lang !== sourceLanguage) {
       try {
         translations[lang] = await translateText(text, lang, sourceLanguage);
-        // Add a small delay to respect rate limits
-        await new Promise(resolve => setTimeout(resolve, 500));
+        // Add a small delay to respect rate limits (configurable via env)
+        await new Promise(resolve => setTimeout(resolve, TRANSLATION_DELAY_MS));
       } catch (error) {
         console.error(`Failed to translate to ${lang}:`, error);
         translations[lang] = text; // Fallback to original text

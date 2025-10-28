@@ -66,12 +66,17 @@ export async function scrapeArticle(
     }
 
     // Extract publish date (optional)
+    // Note: Date parsing from text is unreliable. Consider implementing custom
+    // date parsers for each site or using a library like date-fns in production.
     let publishedAt: Date | undefined;
     if (config.dateSelector) {
       const dateText = $(config.dateSelector).first().text().trim();
       if (dateText) {
         const parsedDate = new Date(dateText);
-        if (!isNaN(parsedDate.getTime())) {
+        // Validate that the parsed date is reasonable (not in far future, not before 2000)
+        if (!isNaN(parsedDate.getTime()) && 
+            parsedDate.getFullYear() >= 2000 && 
+            parsedDate.getTime() <= Date.now()) {
           publishedAt = parsedDate;
         }
       }

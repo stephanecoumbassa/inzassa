@@ -54,7 +54,7 @@ The system uses LibreTranslate, a free, open-source translation API:
 
 ### Step 1: Configure Articles to Scrape
 
-Edit `scripts/collect-news.js` and update the `articlesToScrape` array:
+Edit `scripts/collect-news.ts` and update the `articlesToScrape` array:
 
 ```javascript
 const articlesToScrape = [
@@ -93,7 +93,11 @@ export const scraperConfigs: Record<string, ScraperConfig> = {
 ### Step 3: Run the Collection Script
 
 ```bash
-node scripts/collect-news.js
+# Using npm script (recommended)
+npm run collect-news
+
+# Or using tsx directly
+npx tsx scripts/collect-news.ts
 ```
 
 The script will:
