@@ -49,51 +49,47 @@ const articlesToScrape: Array<{
 
 /**
  * Collect and process a single article
- * @returns true if collected successfully, false if skipped (duplicate), throws on error
+ * @returns true if collected successfully, false if skipped (duplicate)
+ * @throws Error if scraping, translation, or saving fails
  */
 async function collectArticle(item: typeof articlesToScrape[0]): Promise<boolean> {
-  try {
-    console.log(`\n📰 Scraping: ${item.url}`);
+  console.log(`\n📰 Scraping: ${item.url}`);
 
-    // Step 1: Scrape the article
-    const scrapedArticle = await scrapeArticle(item.url, scraperConfigs[item.site]);
-    console.log(`✅ Scraped: ${scrapedArticle.title.substring(0, 60)}...`);
+  // Step 1: Scrape the article
+  const scrapedArticle = await scrapeArticle(item.url, scraperConfigs[item.site]);
+  console.log(`✅ Scraped: ${scrapedArticle.title.substring(0, 60)}...`);
 
-    // Step 2: Check if article already exists
-    const existingArticle = await News.findOne({ originalUrl: item.url });
-    if (existingArticle) {
-      console.log('ℹ️  Article already exists, skipping...');
-      return false;
-    }
-
-    // Step 3: Translate the article
-    console.log('🌐 Translating article...');
-    const translations = await translateArticle({
-      title: scrapedArticle.title,
-      content: scrapedArticle.content,
-    });
-    console.log('✅ Translation completed');
-
-    // Step 4: Save to database
-    await News.create({
-      title: translations.title,
-      content: translations.content,
-      summary: translations.summary,
-      originalUrl: scrapedArticle.originalUrl,
-      country: item.country,
-      category: item.category,
-      imageUrl: scrapedArticle.imageUrl,
-      publishedAt: scrapedArticle.publishedAt || new Date(),
-      featured: false,
-      scrapedAt: new Date(),
-    });
-
-    console.log('💾 Article saved to database');
-    return true;
-  } catch (error) {
-    console.error(`❌ Error processing ${item.url}:`, error instanceof Error ? error.message : error);
+  // Step 2: Check if article already exists
+  const existingArticle = await News.findOne({ originalUrl: item.url });
+  if (existingArticle) {
+    console.log('ℹ️  Article already exists, skipping...');
     return false;
   }
+
+  // Step 3: Translate the article
+  console.log('🌐 Translating article...');
+  const translations = await translateArticle({
+    title: scrapedArticle.title,
+    content: scrapedArticle.content,
+  });
+  console.log('✅ Translation completed');
+
+  // Step 4: Save to database
+  await News.create({
+    title: translations.title,
+    content: translations.content,
+    summary: translations.summary,
+    originalUrl: scrapedArticle.originalUrl,
+    country: item.country,
+    category: item.category,
+    imageUrl: scrapedArticle.imageUrl,
+    publishedAt: scrapedArticle.publishedAt || new Date(),
+    featured: false,
+    scrapedAt: new Date(),
+  });
+
+  console.log('💾 Article saved to database');
+  return true;
 }
 
 /**
@@ -154,7 +150,9 @@ async function collectNews() {
 }
 
 // Run if executed directly
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Check if this module is the main module being executed
+const isMainModule = process.argv[1] && import.meta.url === `file://${process.argv[1]}`;
+if (isMainModule) {
   collectNews();
 }
 

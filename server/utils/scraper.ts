@@ -87,7 +87,7 @@ export async function scrapeArticle(
       content,
       imageUrl,
       originalUrl: url,
-      publishedAt: publishedAt || new Date(),
+      publishedAt,
     };
   } catch (error) {
     if (axios.isAxiosError(error)) {
