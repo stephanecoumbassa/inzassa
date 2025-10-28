@@ -1,0 +1,50 @@
+{
+  "nav": {
+    "home": "Startseite",
+    "news": "Nachrichten",
+    "books": "Bücher",
+    "countries": "Länder",
+    "about": "Über uns"
+  },
+  "home": {
+    "title": "Frankophone afrikanische Nachrichten",
+    "subtitle": "Ihr Informationsportal für frankophone afrikanische Länder",
+    "featured": "Hervorgehoben",
+    "latest": "Neueste Nachrichten"
+  },
+  "news": {
+    "title": "Nachrichten",
+    "readMore": "Weiterlesen",
+    "category": "Kategorie",
+    "country": "Land",
+    "publishedAt": "Veröffentlicht am",
+    "source": "Quelle"
+  },
+  "books": {
+    "title": "Bücher afrikanischer Autoren",
+    "author": "Autor",
+    "year": "Jahr",
+    "genre": "Genre",
+    "readSummary": "Zusammenfassung lesen"
+  },
+  "countries": {
+    "title": "Frankophone afrikanische Länder",
+    "capital": "Hauptstadt",
+    "population": "Bevölkerung",
+    "languages": "Sprachen",
+    "currency": "Währung",
+    "learnMore": "Mehr erfahren"
+  },
+  "categories": {
+    "politique": "Politik",
+    "economie": "Wirtschaft",
+    "sport": "Sport",
+    "culture": "Kultur",
+    "societe": "Gesellschaft",
+    "international": "International"
+  },
+  "footer": {
+    "description": "Nachrichtenportal für frankophone afrikanische Länder",
+    "copyright": "© 2024 Inzassa. Alle Rechte vorbehalten."
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "nav": {
+    "home": "Home",
+    "news": "Notizie",
+    "books": "Libri",
+    "countries": "Paesi",
+    "about": "Chi siamo"
+  },
+  "home": {
+    "title": "Notizie dall'Africa Francofona",
+    "subtitle": "Il tuo portale di informazione per i paesi africani francofoni",
+    "featured": "In evidenza",
+    "latest": "Ultime Notizie"
+  },
+  "news": {
+    "title": "Notizie",
+    "readMore": "Leggi di più",
+    "category": "Categoria",
+    "country": "Paese",
+    "publishedAt": "Pubblicato il",
+    "source": "Fonte"
+  },
+  "books": {
+    "title": "Libri di Autori Africani",
+    "author": "Autore",
+    "year": "Anno",
+    "genre": "Genere",
+    "readSummary": "Leggi il riassunto"
+  },
+  "countries": {
+    "title": "Paesi Africani Francofoni",
+    "capital": "Capitale",
+    "population": "Popolazione",
+    "languages": "Lingue",
+    "currency": "Valuta",
+    "learnMore": "Scopri di più"
+  },
+  "categories": {
+    "politique": "Politica",
+    "economie": "Economia",
+    "sport": "Sport",
+    "culture": "Cultura",
+    "societe": "Società",
+    "international": "Internazionale"
+  },
+  "footer": {
+    "description": "Portale di notizie per i paesi africani francofoni",
+    "copyright": "© 2024 Inzassa. Tutti i diritti riservati."
+  }
+}
