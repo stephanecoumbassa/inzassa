@@ -10,7 +10,16 @@
     "title": "Frankophone afrikanische Nachrichten",
     "subtitle": "Ihr Informationsportal für frankophone afrikanische Länder",
     "featured": "Hervorgehoben",
-    "latest": "Neueste Nachrichten"
+    "latest": "Neueste Nachrichten",
+    "viewAll": "Alle anzeigen",
+    "multilingual": "Mehrsprachige Nachrichten",
+    "countries": "16 Länder",
+    "culture": "Afrikanische Kultur",
+    "noFeaturedNews": "Noch keine hervorgehobenen Artikel",
+    "noFeaturedNewsDesc": "Schauen Sie bald wieder vorbei für herausragende Geschichten aus dem frankophonen Afrika.",
+    "noLatestNews": "Keine Artikel verfügbar",
+    "noLatestNewsDesc": "Wir arbeiten daran, Ihnen die neuesten Nachrichten aus dem frankophonen Afrika zu bringen.",
+    "exploreNews": "Nachrichten erkunden"
   },
   "news": {
     "title": "Nachrichten",
@@ -45,6 +54,7 @@
   },
   "footer": {
     "description": "Nachrichtenportal für frankophone afrikanische Länder",
-    "copyright": "© 2024 Inzassa. Alle Rechte vorbehalten."
+    "copyright": "© 2024 Inzassa. Alle Rechte vorbehalten.",
+    "languages": "Sprachen"
   }
 }
