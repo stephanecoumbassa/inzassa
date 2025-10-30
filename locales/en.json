@@ -10,7 +10,16 @@
     "title": "Francophone African News",
     "subtitle": "Your information portal for Francophone African countries",
     "featured": "Featured",
-    "latest": "Latest News"
+    "latest": "Latest News",
+    "viewAll": "View All",
+    "multilingual": "Multilingual News",
+    "countries": "16 Countries",
+    "culture": "African Culture",
+    "noFeaturedNews": "No Featured Articles Yet",
+    "noFeaturedNewsDesc": "Check back soon for featured stories from across Francophone Africa.",
+    "noLatestNews": "No Articles Available",
+    "noLatestNewsDesc": "We're working on bringing you the latest news from Francophone Africa.",
+    "exploreNews": "Explore News"
   },
   "news": {
     "title": "News",
@@ -45,6 +54,7 @@
   },
   "footer": {
     "description": "News portal for Francophone African countries",
-    "copyright": "© 2024 Inzassa. All rights reserved."
+    "copyright": "© 2024 Inzassa. All rights reserved.",
+    "languages": "Languages"
   }
 }

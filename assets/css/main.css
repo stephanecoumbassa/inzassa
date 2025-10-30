@@ -12,6 +12,11 @@
   --light-bg: #f5f5f5;
   --border-color: #ddd;
   --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -19,6 +24,8 @@ body {
   line-height: 1.6;
   color: var(--text-color);
   background-color: var(--bg-color);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .container {
@@ -27,82 +34,20 @@ body {
   padding: 0 20px;
 }
 
-/* Header */
-header {
-  background-color: var(--primary-color);
-  color: white;
-  padding: 1rem 0;
-  box-shadow: var(--shadow);
-}
-
-header nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-header .logo {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-header nav ul {
-  display: flex;
-  list-style: none;
-  gap: 2rem;
-}
-
-header nav a {
-  color: white;
-  text-decoration: none;
-  transition: opacity 0.3s;
-}
-
-header nav a:hover {
-  opacity: 0.8;
-}
+/* Header styles moved to Header.vue component */
 
 /* Main Content */
 main {
   min-height: calc(100vh - 200px);
-  padding: 2rem 0;
 }
 
-/* Cards */
-.card {
-  background: white;
-  border-radius: 8px;
-  box-shadow: var(--shadow);
-  overflow: hidden;
-  transition: transform 0.3s;
+/* Improved focus styles for accessibility */
+*:focus-visible {
+  outline: 3px solid var(--secondary-color);
+  outline-offset: 2px;
 }
 
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.card img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-}
-
-.card-content {
-  padding: 1.5rem;
-}
-
-.card-title {
-  font-size: 1.25rem;
-  margin-bottom: 0.5rem;
-  color: var(--primary-color);
-}
-
-.card-meta {
-  font-size: 0.875rem;
-  color: #666;
-  margin-bottom: 1rem;
-}
+/* Card styles moved to NewsCard.vue component */
 
 /* Grid Layout */
 .grid {
@@ -146,38 +91,9 @@ footer {
   margin-top: 3rem;
 }
 
-/* Language Selector */
-.language-selector {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-}
+/* Language selector styles moved to Header.vue component */
 
-.language-selector a {
-  padding: 0.25rem 0.5rem;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
-  font-size: 0.875rem;
-}
-
-/* Hero Section */
-.hero {
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-  color: white;
-  padding: 4rem 0;
-  text-align: center;
-  margin-bottom: 3rem;
-}
-
-.hero h1 {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-}
-
-.hero p {
-  font-size: 1.25rem;
-  opacity: 0.9;
-}
+/* Hero styles moved to index.vue page */
 
 /* Category Tags */
 .category-tag {
